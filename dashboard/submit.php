@@ -3,7 +3,7 @@
     include_once tools("pager");
     include_once tools("sanitizer");
 
-    session_start();
+    admin_page();
 
     // Set content type to JSON for AJAX response
     header('Content-Type: application/json');
@@ -14,15 +14,15 @@
     $category = sanitize($_POST['category'] ?? '');
     $subcategory = sanitize($_POST['subcategory'] ?? '');
     $content = $_POST['components'] ?? '';
-
+    
     $created_by = $_SESSION['username'];
     $updated_by = $_SESSION['username'];
 
     // Check required fields
-    if (!$title || !$description || !$category) {
+    if (!$title || !$description || !$category || !$content) {
         echo json_encode([
             'success' => false,
-            'message' => 'Title, description, and category are required.'
+            'message' => 'Title, description, and category and content are required.'
         ]);
         exit();
     }
@@ -47,7 +47,7 @@
         $lastInsertId = $conn->lastInsertId();
     
         // Assuming you have a link value ready to update
-        $link = url("forms")."?id=".$lastInsertId; // Replace with your actual link value
+        $link = url("forms")."?title=".$title."&id=".$lastInsertId; // Replace with your actual link value
         
     
         // Update the page table to set the link column value

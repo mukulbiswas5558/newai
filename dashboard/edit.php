@@ -3,10 +3,10 @@ include_once tools("pager");
 
 admin_page();
 
-$title = "Avenger";
+$title = "Admin Edit Dashboard";
 // echo $title;
 // die();
-View("header", ["title" => $title]);
-View("card", ["title" => $title, "content" => $title]);
+View("common/header", ["title" => $title]);
+View("main");
+View("common/footer");
 
-?>
