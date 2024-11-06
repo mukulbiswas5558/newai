@@ -8,7 +8,7 @@ define("TOOLS", dirname(__FILE__) . "/tools/");
 define("PATH", $_SERVER["DOCUMENT_ROOT"] . "/avenger"); // for development
 
 // URLs
-// define("URL", "https://--.--"); // for production
+// define("URL", "https://--.--"); // for production new commit
 define("URL", "http://localhost/avenger"); // for development
 
 // Static Files
