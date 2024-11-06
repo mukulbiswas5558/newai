@@ -1,5 +1,11 @@
 
 let selectedComponent = null;
+function putNameAttribute(id, name) {
+    let inputName = name.toUpperCase().replaceAll(" ", "_");
+    
+    document.getElementById(id).setAttribute("name", inputName);
+    
+}
 
 function generateUUID() {
     const randomBytes = new Uint8Array(16);
@@ -524,82 +530,82 @@ function openToolbar(type, id) {
         });
     } else if (type == 'input') {
         let inputTextBox = document.getElementById(`${id}_input`);
-        let inputTextLabel = document.getElementById(`${id}_label`)
+        let inputTextLabel = document.getElementById(`${id}_label`);
         toolbar.innerHTML = `
-                <label for="${id}_input_label" class="block text-sm font-medium text-gray-700">Input Label</label>
+            <label for="${id}_input_label" class="block text-sm font-medium text-gray-700">Input Label</label>
+            <input
+                type="text"
+                class="${inputFieldClass}"
+                placeholder="e.g., First Name"
+                id="${id}_input_label"
+                value="${inputTextLabel.innerText}"
+            />
+    
+            <div class="${checkboxStyleClass}">
                 <input
-                    type="text"
-                    class="${inputFieldClass}"
-                    placeholder="eg. First Name"
-                    id="${id}_input_label"
-                    value="${inputTextLabel.innerText}"
-                    />
-
-                <div class="${checkboxStyleClass}">
-                    <input
-                        type="checkbox"
-                        class="h-4 w-4"
-                        id="${id}_input_required"
-                        ${inputTextBox.getAttribute('required') ? "checked=true" : ""}
-                        />
-                    <label for="${id}_input_required" class="block font-medium  text-gray-700">Required Field</label>
-                </div>
-
-                <label for="${id}_input_placeholder" class="block text-sm font-medium text-gray-700">Input Label</label>
-                <input
-                    type="text"
-                    class="${inputFieldClass}"
-                    placeholder="eg. John"
-                    id="${id}_input_placeholder"
-                    value="${inputTextBox.getAttribute('placeholder')}"
-                    />
-
-
-                <label for="${id}_input_type" class="block text-sm font-medium text-gray-700">Select Input Type</label>
-                <select id="${id}_input_type" class="${inputFieldClass}">
-                    <option value="text">Text</option>
-                    <option value="number">Number</option>
-                    <option value="email">Email</option>
-                    <option value="password">Password</option>
-                    <option value="date">Date</option>
-                    <option value="time">Time</option>
-                    <option value="month">Month</option>
-                    <option value="datetime-local">Date & Time</option>
-                </select>
-            `;
-
-        // Set the initial input type based on the selected option
+                    type="checkbox"
+                    class="h-4 w-4"
+                    id="${id}_input_required"
+                    ${inputTextBox.getAttribute('required') ? "checked" : ""}
+                />
+                <label for="${id}_input_required" class="block font-medium text-gray-700">Required Field</label>
+            </div>
+    
+            <label for="${id}_input_placeholder" class="block text-sm font-medium text-gray-700">Placeholder</label>
+            <input
+                type="text"
+                class="${inputFieldClass}"
+                placeholder="e.g., John"
+                id="${id}_input_placeholder"
+                value="${inputTextBox.getAttribute('placeholder') || ''}"
+            />
+    
+            <label for="${id}_input_type" class="block text-sm font-medium text-gray-700">Select Input Type</label>
+            <select id="${id}_input_type" class="${inputFieldClass}">
+                <option value="text">Text</option>
+                <option value="number">Number</option>
+                <option value="email">Email</option>
+                <option value="password">Password</option>
+                <option value="date">Date</option>
+                <option value="time">Time</option>
+                <option value="month">Month</option>
+                <option value="datetime-local">Date & Time</option>
+            </select>
+        `;
+    
+        // Set initial input type
         const inputTypeSelect = document.getElementById(`${id}_input_type`);
-        const inputLabelBox = document.getElementById(`${id}_input_label`);
-        const isInputRequired = document.getElementById(`${id}_input_required`);
-        const inputPlaceholder = document.getElementById(`${id}_input_placeholder`);
-
-        // Event listener for the select box to change the input type
+        inputTypeSelect.value = inputTextBox.type;
         inputTypeSelect.addEventListener('change', (e) => {
             inputTextBox.setAttribute('type', e.target.value);
         });
-
+    
+        const isInputRequired = document.getElementById(`${id}_input_required`);
         isInputRequired.addEventListener('change', (e) => {
             inputTextBox.required = e.target.checked;
-            const supElement = document.createElement('sup');
-            supElement.classList.add("text-red-600", "font-bold");
-            supElement.innerText = "*"
-            supElement.id = `${id}_isrequired`
             if (e.target.checked) {
-                document.getElementById(`${id}_label_container`).appendChild(supElement)
+                if (!document.getElementById(`${id}_isrequired`)) {
+                    const supElement = document.createElement('sup');
+                    supElement.classList.add("text-red-600", "font-bold");
+                    supElement.innerText = "*";
+                    supElement.id = `${id}_isrequired`;
+                    document.getElementById(`${id}_label_container`).appendChild(supElement);
+                }
             } else {
-                document.getElementById(`${id}_isrequired`).remove()
+                document.getElementById(`${id}_isrequired`)?.remove();
             }
-        })
-
+        });
+    
+        const inputLabelBox = document.getElementById(`${id}_input_label`);
         inputLabelBox.addEventListener('input', (e) => {
             inputTextLabel.innerText = e.target.value;
-        })
-
-
+            putNameAttribute(`${id}_input`, e.target.value);
+        });
+    
+        const inputPlaceholder = document.getElementById(`${id}_input_placeholder`);
         inputPlaceholder.addEventListener('input', (e) => {
-            inputTextBox.setAttribute('placeholder', e.target.value)
-        })
+            inputTextBox.setAttribute('placeholder', e.target.value);
+        });
     } else if (['radio', 'checkbox', "select"].includes(type)) {
         let inputTextLabel = document.getElementById(`${id}_label`)
         toolbar.innerHTML = `
